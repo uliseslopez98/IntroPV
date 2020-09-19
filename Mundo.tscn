@@ -1,0 +1,84 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Jugador.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Mundo.gd" type="Script" id=2]
+[ext_resource path="res://enemigo-triangulo.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Interface.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Spawnea.tscn" type="PackedScene" id=6]
+[ext_resource path="res://Punto.tscn" type="PackedScene" id=7]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 141.716, 224.106, 0, 0, 0, 0, 223.741, 192.994, 0, 0, 0, 0, 300.108, 289.16, 0, 0, 0, 0, 506.583, 202.893, 0, 0, 0, 0, 653.661, 258.047, 0, 0, 0, 0, 824.781, 229.763, 0, 0, 0, 0, 854.48, 337.243, 0, 0, 0, 0, 669.218, 406.54, 0, 0, 0, 0, 601.336, 320.273, 0, 0, 0, 0, 475.471, 376.841, 0, 0, 0, 0, 407.588, 308.959, 0, 0, 0, 0, 305.765, 365.528, 0, 0, 0, 0, 145.959, 313.202, 0, 0, 0, 0, 141.716, 224.106 )
+}
+
+[sub_resource type="Curve2D" id=2]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 54.4893, 126.186, 0, 0, 0, 0, 248.237, 22.9481, 0, 0, 0, 0, 385.415, 164.369, 0, 0, 0, 0, 572.091, 49.8182, 0, 0, 0, 0, 664.015, 179.926, 0, 0, 0, 0, 815.336, 51.2324, 0, 0, 0, 0, 898.775, 164.369, 0, 0, 0, 0, 946.858, 54.0608, 0, 0, 0, 0, 938.373, 530.651, 0, 0, 0, 0, 770.081, 427.413, 0, 0, 0, 0, 690.885, 543.379, 0, 0, 0, 0, 538.15, 424.585, 0, 0, 0, 0, 443.398, 517.923, 0, 0, 0, 0, 354.303, 411.857, 0, 0, 0, 0, 272.278, 510.852, 0, 0, 0, 0, 204.396, 406.2, 0, 0, 0, 0, 54.4893, 529.237, 0, 0, 0, 0, 54.4893, 126.186 )
+}
+
+[node name="Mundo" type="Node"]
+script = ExtResource( 2 )
+Triangulo = ExtResource( 3 )
+Cuadrado = ExtResource( 7 )
+
+[node name="Jugador" parent="." instance=ExtResource( 1 )]
+position = Vector2( 509.193, 355.409 )
+
+[node name="Position2D" type="Position2D" parent="."]
+visible = false
+position = Vector2( 500, 450 )
+
+[node name="inicioTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="trianguloTimer" type="Timer" parent="."]
+wait_time = 0.5
+
+[node name="CambioSpawn" type="Timer" parent="."]
+wait_time = 5.0
+
+[node name="PuntosTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[node name="Interface" parent="." instance=ExtResource( 4 )]
+
+[node name="Spawnea" parent="." instance=ExtResource( 6 )]
+visible = false
+position = Vector2( 41.1991, 42.2671 )
+
+[node name="Spawnea2" parent="." instance=ExtResource( 6 )]
+visible = false
+position = Vector2( 902.986, 37.3395 )
+
+[node name="Spawnea3" parent="." instance=ExtResource( 6 )]
+visible = false
+position = Vector2( 827.923, 531.616 )
+
+[node name="camino" type="Path2D" parent="."]
+visible = false
+position = Vector2( -13.6878, -5.18976 )
+curve = SubResource( 1 )
+
+[node name="aparicion" type="PathFollow2D" parent="camino"]
+visible = false
+position = Vector2( 141.716, 224.106 )
+rotation = -0.362527
+
+[node name="Lugar" type="Path2D" parent="."]
+visible = false
+position = Vector2( 2.82843, 1.41422 )
+curve = SubResource( 2 )
+
+[node name="Agarrar" type="PathFollow2D" parent="Lugar"]
+visible = false
+position = Vector2( 54.4893, 126.186 )
+rotation = -0.48958
+[connection signal="golpe" from="Jugador" to="." method="gameOver"]
+[connection signal="punto" from="Jugador" to="." method="_on_Jugador_punto"]
+[connection signal="timeout" from="inicioTimer" to="." method="_on_inicioTimer_timeout"]
+[connection signal="timeout" from="trianguloTimer" to="." method="_on_trianguloTimer_timeout"]
+[connection signal="timeout" from="CambioSpawn" to="." method="_on_CambioSpawn_timeout"]
+[connection signal="timeout" from="PuntosTimer" to="." method="_on_PuntosTimer_timeout"]
+[connection signal="iniciarJuego" from="Interface" to="." method="nuevoJuego"]
